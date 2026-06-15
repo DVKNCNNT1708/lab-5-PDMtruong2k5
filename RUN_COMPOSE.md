@@ -53,7 +53,7 @@ curl http://localhost:8000/health
 curl http://localhost:9000/health
 
 # DB readiness
-docker exec -it fit4110-db-lab05 pg_isready -U $POSTGRES_USER
+docker compose exec -T db pg_isready -U $POSTGRES_USER
 ```
 
 Bạn cũng có thể truy cập endpoint `/predict` của AI service để xem kết quả mẫu:

@@ -76,8 +76,12 @@ FIT4110_lab05_docker_compose_readiness/
 │   └── ai_service/
 │       └── main.py
 ├── contracts/
-│   └── iot-ingestion.openapi.yaml
+│   ├── iot-ingestion.openapi.yaml
+│   ├── ai-vision.openapi.yaml
+│   └── analytics.openapi.yaml
 ├── postman/
+│   ├── collections/
+│   │   └── FIT4110_lab05_iot.postman_collection.json
 │   └── environments/
 │       └── FIT4110_lab05_local.postman_environment.json
 ├── checklists/
@@ -154,10 +158,16 @@ docker compose logs -f
 Kiểm tra readiness của từng service:
 
 - API: `curl http://localhost:8000/health`
-- DB: `docker exec -it fit4110-db-lab05 pg_isready -U $POSTGRES_USER`
+- DB: `docker compose exec -T db pg_isready -U $POSTGRES_USER`
 - AI: `curl http://localhost:9000/health` (service mẫu trả về JSON đơn giản)
 
-Sau khi stack đã sẵn sàng, chạy lại Postman collection giống Lab 04 (sửa `baseUrl` thành `http://localhost:8000`).
+Sau khi stack đã sẵn sàng, chạy lại Postman/Newman bằng collection trong repo:
+
+```bash
+npm run test:compose
+```
+
+Collection dùng `postman/collections/FIT4110_lab05_iot.postman_collection.json` và environment `postman/environments/FIT4110_lab05_local.postman_environment.json`.
 
 Dừng toàn bộ stack:
 
@@ -232,8 +242,9 @@ docker-compose.yml
 .dockerignore
 .env.example
 RUN_COMPOSE.md
-contracts/<team>.openapi.yaml
-postman/environments/<team>_local.postman_environment.json
+contracts/iot-ingestion.openapi.yaml
+postman/collections/FIT4110_lab05_iot.postman_collection.json
+postman/environments/FIT4110_lab05_local.postman_environment.json
 reports/newman-lab05-compose.xml
 reports/newman-lab05-compose.html
 ảnh chụp /health hoặc log container

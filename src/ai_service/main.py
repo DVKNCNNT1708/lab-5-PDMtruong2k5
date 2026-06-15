@@ -1,20 +1,15 @@
-"""
-Simple AI service mock for Lab 05.
+"""Simple AI service mock for Lab 05."""
 
-This service exposes two endpoints:
-
-* `GET /health` – returns status, service name and version.
-* `POST /predict` – returns a dummy list of detected objects and confidences.
-
-You can replace this file with your actual inference code (e.g. YOLOv8 model).
-"""
+import os
+from typing import List
 
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List
 
-SERVICE_NAME = "ai-service"
-SERVICE_VERSION = "0.5.0"
+SERVICE_NAME = os.getenv("SERVICE_NAME", "ai-service")
+SERVICE_VERSION = os.getenv("SERVICE_VERSION", "0.5.0")
+AI_SERVICE_HOST = os.getenv("AI_SERVICE_HOST", "0.0.0.0")
+AI_SERVICE_PORT = int(os.getenv("AI_SERVICE_PORT", "9000"))
 
 app = FastAPI(
     title="FIT4110 Lab 05 - AI Service",
@@ -35,10 +30,10 @@ def health() -> dict:
 
 @app.post("/predict", response_model=Prediction)
 def predict() -> Prediction:
-    # This dummy implementation always returns two objects
     return Prediction(objects=["person", "bicycle"], confidence=[0.98, 0.85])
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=9000)
+
+    uvicorn.run(app, host=AI_SERVICE_HOST, port=AI_SERVICE_PORT)
